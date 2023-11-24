@@ -10,7 +10,7 @@ class Car(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(nullable=False)
     type: Mapped[str] = mapped_column(nullable=False)
-
+    number: Mapped[str] = mapped_column(nullable=False, unique=True)
     owner_id: Mapped[int] = mapped_column(
         ForeignKey('users.id'),
         nullable=False

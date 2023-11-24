@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from backend.models import Base
-from credentials import POSTGRES_USER, POSTGRES_PORT, POSTGRES_SERVER, POSTGRES_DB, POSTGRES_PASS
+from credentials import POSTGRES_USER, POSTGRES_PORT, POSTGRES_SERVER, POSTGRES_DB, POSTGRES_PASSWORD
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -17,7 +17,7 @@ config.set_section_option(section, "POSTGRES_USER", POSTGRES_USER)
 config.set_section_option(section, "POSTGRES_PORT", POSTGRES_PORT)
 config.set_section_option(section, "POSTGRES_SERVER", POSTGRES_SERVER)
 config.set_section_option(section, "POSTGRES_DB", POSTGRES_DB)
-config.set_section_option(section, "POSTGRES_PASS", POSTGRES_PASS)
+config.set_section_option(section, "POSTGRES_PASS", POSTGRES_PASSWORD)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
