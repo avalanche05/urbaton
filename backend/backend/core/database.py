@@ -1,0 +1,30 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from backend.config import get_settings
+
+
+def get_url():
+    settings = get_settings()
+    user = settings.POSTGRES_USER
+    password = settings.POSTGRES_PASSWORD
+    host = settings.POSTGRES_SERVER
+    db = settings.POSTGRES_DB
+    return f"postgresql://{user}:{password}@{host}/{db}"
+
+
+engine = create_engine(get_url())
+
+SessionLocal = sessionmaker(
+    bind=engine,
+    autocommit=False,
+    autoflush=False,
+)
+
+
+async def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
