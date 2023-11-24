@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
 
     model_config = SettingsConfigDict(
-        env_file='backend/.env',
+        env_file='.env',
         env_file_encoding='utf-8'
     )
 
