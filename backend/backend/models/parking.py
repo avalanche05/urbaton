@@ -1,4 +1,4 @@
-from typing import Dict, List, TYPE_CHECKING
+from typing import Dict, List
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ARRAY, String, Table, Column, ForeignKey
@@ -44,4 +44,8 @@ class Parking(Base):
     is_favorite: Mapped[list['User']] = relationship(
         secondary=association_is_favorite,
         back_populates='favorite_parkings'
+    )
+    places: Mapped[list['Place']] = relationship(
+        back_populates='parking',
+        cascade='all,delete-orphan',
     )
