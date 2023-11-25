@@ -6,6 +6,8 @@ import { getDistance } from '../utils/GeoUtils';
 import { CitiesCoords } from '../contants';
 import { mapGeoArrayToLineString } from '../utils/mapGeoToLineString';
 import Dock from '../components/Dock';
+import Search from '../components/Search';
+import SearchDock from '../components/SearchDock';
 
 const Parkings = observer(() => {
     const [YMaps, setYMaps] = useState(<div />);
@@ -137,6 +139,9 @@ const Parkings = observer(() => {
             <div style={{ width: '100%', height: '100vh' }}>{YMaps}</div>
 
             <Dock />
+
+            <Search />
+            <SearchDock />
         </>
     );
 });

@@ -7,12 +7,17 @@ import { getDistance } from '../utils/GeoUtils';
 
 export class RootStore {
     parkings: IParking[] = [];
+    filters: unknown = {};
     mapLocation: IMapLocation = {
         center: [CitiesCoords.ekb.longitude, CitiesCoords.ekb.lattitude],
         zoom: 11,
     };
     start: [number, number] = [CitiesCoords.ekb.longitude, CitiesCoords.ekb.lattitude]; // [longitude, latitude]
     activeParking: IParking | null = null;
+    isSearchOpened: boolean | null = null;
+    isFiltersOpened: boolean | null = null;
+    isParkingsLoading: boolean = false;
+    currentSearch: string = '';
 
     constructor() {
         makeAutoObservable(this);
@@ -62,13 +67,51 @@ export class RootStore {
         }
     }
 
+    setIsParkingsLoading(isParkingsLoading: boolean) {
+        this.isParkingsLoading = isParkingsLoading;
+    }
+
+    setCurrentSearch(currentSearch: string) {
+        this.currentSearch = currentSearch;
+    }
+
+    toggleSearch() {
+        this.isSearchOpened = !this.isSearchOpened;
+    }
+
+    toggleFilters() {
+        this.isFiltersOpened = !this.isFiltersOpened;
+    }
+
     async fetchParkings() {
+        this.setIsParkingsLoading(true);
+
         const parkings = await ParkingsApiServiceInstanse.getParkings({
             latitude: this.start[1],
             longitude: this.start[0],
         });
 
         this.setParkings(parkings);
+
+        this.setIsParkingsLoading(false);
+
+        return parkings;
+    }
+
+    async searchParkingsByAddress(address: string) {
+        this.setIsParkingsLoading(true);
+
+        const parkings = await ParkingsApiServiceInstanse.getParkings({
+            address,
+        });
+
+        this.setParkings(parkings);
+
+        if (parkings.length > 0) {
+            this.setActiveParking(parkings[0]);
+        }
+
+        this.setIsParkingsLoading(false);
 
         return parkings;
     }

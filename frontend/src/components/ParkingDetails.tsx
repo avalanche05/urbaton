@@ -132,7 +132,7 @@ const ParkingDetails = observer(({ parking }: Props) => {
 
                             <Row style={{ marginTop: 20, marginBottom: 20 }} gutter={[8, 8]}>
                                 <Col span={12}>
-                                    <div className='parking__free-spaces parking__free-spaces_high'>
+                                    <div className='parking__free-spaces parking__free-spaces_high parking__free-spaces_center'>
                                         <Row align={'middle'}>
                                             <span className='free-spaces'>
                                                 {parking.base_spaces - parking.busy_base_spaces}
@@ -149,7 +149,7 @@ const ParkingDetails = observer(({ parking }: Props) => {
                                 </Col>
 
                                 <Col span={12}>
-                                    <div className='parking__free-spaces parking__free-spaces_high'>
+                                    <div className='parking__free-spaces parking__free-spaces_high parking__free-spaces_center'>
                                         <Row align={'middle'}>
                                             <span className='free-spaces'>
                                                 {parking.disabled_spaces -
@@ -180,6 +180,19 @@ const ParkingDetails = observer(({ parking }: Props) => {
 
                                         <Typography.Text className='base-text'>
                                             Свободных мест для электромобилей
+                                        </Typography.Text>
+                                    </div>
+                                </Col>
+
+                                <Col span={24}>
+                                    <div className='parking__free-spaces'>
+                                        <Row align={'middle'}>
+                                            <span className='free-spaces'>0</span>
+                                            <span className='total-spaces'>/ 0</span>
+                                        </Row>
+
+                                        <Typography.Text className='base-text'>
+                                            Свободных мест для грузовиков
                                         </Typography.Text>
                                     </div>
                                 </Col>
