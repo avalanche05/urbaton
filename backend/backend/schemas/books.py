@@ -19,4 +19,4 @@ class BookCreateRequest(BaseModel):
     time_start: datetime
     time_end: datetime
     car_ids: list[int]
-    place_number: Optional[str]
+    place_id: Optional[int] = None
