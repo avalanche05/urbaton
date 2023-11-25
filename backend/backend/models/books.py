@@ -1,20 +1,9 @@
 from datetime import datetime
-from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Table, Column, ForeignKey
+from sqlalchemy import ForeignKey
 
-from backend.models import Base
-
-if TYPE_CHECKING:
-    from backend.models import Car, Parking, User
-
-association_table_book_car = Table(
-    "association_table_book_car",
-    Base.metadata,
-    Column("book_id", ForeignKey("books.id"), primary_key=True),
-    Column("car_id", ForeignKey("cars.id"), primary_key=True),
-)
+from backend.models import Base, association_table_book_car
 
 
 class Book(Base):
@@ -44,5 +33,3 @@ class Book(Base):
     cars: Mapped[list['Car']] = relationship(
         secondary=association_table_book_car, back_populates='book_ids'
     )
-
-
