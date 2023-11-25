@@ -62,7 +62,8 @@ def create_book(db: Session, payload: schemas.BookCreateRequest, db_user: models
         user_id=db_user.id,
         parking_id=payload.parking_id,
         time_start=payload.time_start,
-        time_end=payload.time_start
+        time_end=payload.time_start,
+        place_id=payload.place_id,
     )
     db.add(db_book)
     db.commit()
