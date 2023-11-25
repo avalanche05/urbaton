@@ -29,6 +29,10 @@ class User(Base):
         back_populates='is_favorite'
     )
 
+    reviews: Mapped[list['Review']] = relationship(
+        back_populates='user'
+    )
+
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
 

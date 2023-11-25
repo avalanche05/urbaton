@@ -8,3 +8,4 @@ from .parking import Parking  # noqa : F401
 from .books import Book # noqa : F401
 from .tokens import Token # noqa : F401
 from .places import Place  # noqa : F401
+from .reviews import Review  # noqa : F401

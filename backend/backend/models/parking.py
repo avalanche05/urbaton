@@ -39,6 +39,7 @@ class Parking(Base):
         type_=ARRAY(String)
     )
     rating: Mapped[float] = mapped_column(nullable=False, default=0)
+    review_count: Mapped[int] = mapped_column(nullable=False, default=0)
 
     books: Mapped[list['Book']] = relationship(back_populates='parking')
     is_favorite: Mapped[list['User']] = relationship(
@@ -48,4 +49,8 @@ class Parking(Base):
     places: Mapped[list['Place']] = relationship(
         back_populates='parking',
         cascade='all,delete-orphan',
+    )
+
+    reviews: Mapped[list['Review']] = relationship(
+        back_populates='parking'
     )
