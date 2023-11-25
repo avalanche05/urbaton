@@ -1,35 +1,62 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useStores } from '../hooks/useStores';
+import { observer } from 'mobx-react-lite';
+import { getDistance } from '../utils/GeoUtils';
+import { CitiesCoords } from '../contants';
+import { mapGeoArrayToLineString } from '../utils/mapGeoToLineString';
+import Dock from '../components/Dock';
 
-const Parkings = () => {
+const Parkings = observer(() => {
     const [YMaps, setYMaps] = useState(<div />);
     const map = useRef(null);
     const { rootStore } = useStores();
 
-    // useEffect(() => {
-    //     async function fetchDepartments() {
-    //         await rootStore.fetchUser();
-    //     }
+    useEffect(() => {
+        async function fetchParkings() {
+            await rootStore.fetchParkings();
+        }
 
-    //     if (navigator.geolocation) {
-    //         navigator.geolocation.getCurrentPosition(
-    //             (geo: GeolocationPosition) => {
-    //                 rootStore.setStart([geo.coords.longitude, geo.coords.latitude]);
-    //                 rootStore.setMapLocation({
-    //                     ...rootStore.mapLocation,
-    //                     center: [geo.coords.longitude, geo.coords.latitude],
-    //                 });
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (geo: GeolocationPosition) => {
+                    const distanceFromEkb = getDistance(
+                        { latitude: geo.coords.latitude, longitude: geo.coords.longitude },
+                        {
+                            latitude: CitiesCoords.ekb.lattitude,
+                            longitude: CitiesCoords.ekb.longitude,
+                        }
+                    );
 
-    //                 fetchDepartments();
-    //             },
-    //             (error) => {
-    //                 console.log(error);
-    //                 fetchDepartments();
-    //             }
-    //         );
-    //     }
-    // }, [rootStore]);
+                    if (distanceFromEkb > 80000) {
+                        rootStore.setStart({
+                            longitude: CitiesCoords.ekb.longitude,
+                            latitude: CitiesCoords.ekb.lattitude,
+                        });
+                        rootStore.setMapLocation({
+                            ...rootStore.mapLocation,
+                            center: [CitiesCoords.ekb.longitude, CitiesCoords.ekb.lattitude],
+                        });
+                    } else {
+                        rootStore.setStart({
+                            latitude: geo.coords.latitude,
+                            longitude: geo.coords.longitude,
+                        });
+                        rootStore.setMapLocation({
+                            ...rootStore.mapLocation,
+                            center: [geo.coords.longitude, geo.coords.latitude],
+                        });
+                    }
+
+                    fetchParkings();
+                },
+                (error) => {
+                    console.log(error);
+                    fetchParkings();
+                }
+            );
+        }
+    }, [rootStore]);
 
     useEffect(() => {
         (async () => {
@@ -44,8 +71,13 @@ const Parkings = () => {
 
                 const reactify = ymaps3React.reactify.bindTo(React, ReactDOM);
 
-                const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapControls } =
-                    reactify.module(ymaps3);
+                const {
+                    YMap,
+                    YMapDefaultSchemeLayer,
+                    YMapDefaultFeaturesLayer,
+                    YMapControls,
+                    YMapFeature,
+                } = reactify.module(ymaps3);
                 const { YMapZoomControl, YMapGeolocationControl } = reactify.module(
                     await ymaps3.import('@yandex/ymaps3-controls@0.0.1')
                 );
@@ -67,18 +99,22 @@ const Parkings = () => {
                         <YMapControls position='left'>
                             <YMapGeolocationControl />
                         </YMapControls>
-                        {/* {rootStore.atms.map((atm) => {
+                        {rootStore.parkings.map((parking) => {
                             return (
-                                <YMapMarker
-                                    key={atm._id}
-                                    coordinates={[atm.longitude, atm.latitude]}
-                                    draggable={false}
-                                    position={'center'}
-                                >
-                                    <AtmMarker atm={atm} />
-                                </YMapMarker>
+                                <YMapFeature
+                                    key={parking.id}
+                                    {...mapGeoArrayToLineString(
+                                        parking.polygon,
+                                        parking,
+                                        rootStore.activeParking || undefined
+                                    )}
+                                    onClick={() => {
+                                        rootStore.setActiveParking(parking);
+                                    }}
+                                />
                             );
-                        })} */}
+                        })}
+
                         <YMapDefaultMarker coordinates={[rootStore.start[0], rootStore.start[1]]} />
                     </YMap>
                 ));
@@ -88,13 +124,21 @@ const Parkings = () => {
                 setYMaps(<div />);
             }
         })();
-    }, [rootStore.mapLocation, rootStore.start]);
+    }, [
+        rootStore.mapLocation,
+        rootStore.start,
+        rootStore.parkings,
+        rootStore.activeParking,
+        rootStore,
+    ]);
 
     return (
         <>
             <div style={{ width: '100%', height: '100vh' }}>{YMaps}</div>
+
+            <Dock />
         </>
     );
-};
+});
 
 export default Parkings;

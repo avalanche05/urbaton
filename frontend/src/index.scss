@@ -8,3 +8,98 @@
     align-items: center;
     height: 100vh;
 }
+
+.dock {
+    z-index: 99999;
+}
+
+.parking-general {
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    &__name {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    &__wait-time {
+        font-size: 14px;
+        color: #6b7683;
+        font-weight: 500;
+    }
+
+    &__address {
+        font-size: 14px;
+        color: #6b7683;
+        font-weight: 400;
+    }
+
+    &__duration {
+        font-size: 14px;
+        color: #6b7683;
+        font-weight: 400;
+    }
+
+    &__item {
+        margin-top: 7px;
+    }
+}
+
+.parking {
+    &__details {
+        padding: 0 12px;
+        padding-bottom: 150px;
+
+        &__actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            box-sizing: border-box;
+
+            & button {
+                width: 100%;
+                border-radius: 8px;
+                margin-top: 5px;
+            }
+        }
+    }
+
+    &__free-spaces {
+        display: flex;
+        padding: 8px 16px;
+        justify-content: center;
+        align-items: flex-start;
+        align-content: flex-start;
+        gap: 8px;
+        flex-shrink: 0;
+        flex-wrap: wrap;
+        border-radius: 20px;
+        background: var(--back_blue, rgba(30, 75, 210, 0.08));
+
+        &_high {
+            min-height: 75px;
+        }
+    }
+}
+
+.free-spaces {
+    color: var(--dark-blue, #1e4bd2);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.total-spaces {
+    color: var(--dark_grey, #6b7683);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
