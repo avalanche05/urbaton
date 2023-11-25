@@ -1,13 +1,7 @@
-from typing import TYPE_CHECKING
-
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
 
 from backend.models import Base, association_table_book_car
-
-
-if TYPE_CHECKING:
-    from backend.models import User, Book
 
 
 class Car(Base):
