@@ -1,4 +1,6 @@
 from datetime import datetime
+from typing import Optional
+
 from pydantic import BaseModel
 from .cars import Car
 
@@ -17,3 +19,4 @@ class BookCreateRequest(BaseModel):
     time_start: datetime
     time_end: datetime
     car_ids: list[int]
+    place_number: Optional[str]
