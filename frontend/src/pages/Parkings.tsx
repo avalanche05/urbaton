@@ -8,6 +8,7 @@ import { mapGeoArrayToLineString } from '../utils/mapGeoToLineString';
 import Dock from '../components/Dock';
 import Search from '../components/Search';
 import SearchDock from '../components/SearchDock';
+import FiltersDock from '../components/FiltersDock';
 
 const Parkings = observer(() => {
     const [YMaps, setYMaps] = useState(<div />);
@@ -101,7 +102,7 @@ const Parkings = observer(() => {
                         <YMapControls position='left'>
                             <YMapGeolocationControl />
                         </YMapControls>
-                        {rootStore.parkings.map((parking) => {
+                        {rootStore.filteredParkings.map((parking) => {
                             return (
                                 <YMapFeature
                                     key={parking.id}
@@ -129,7 +130,7 @@ const Parkings = observer(() => {
     }, [
         rootStore.mapLocation,
         rootStore.start,
-        rootStore.parkings,
+        rootStore.filteredParkings,
         rootStore.activeParking,
         rootStore,
     ]);
@@ -142,6 +143,7 @@ const Parkings = observer(() => {
 
             <Search />
             <SearchDock />
+            <FiltersDock />
         </>
     );
 });

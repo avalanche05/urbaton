@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { IGeo, IMapLocation } from '../models';
+import { IFilter, IGeo, IMapLocation } from '../models';
 import { IParking } from '../api/models';
 import { ParkingsApiServiceInstanse } from '../api/ParkingsApiService';
 import { CitiesCoords } from '../contants';
@@ -7,7 +7,8 @@ import { getDistance } from '../utils/GeoUtils';
 
 export class RootStore {
     parkings: IParking[] = [];
-    filters: unknown = {};
+    filters: IFilter = {};
+    filteredParkings: IParking[] = [];
     mapLocation: IMapLocation = {
         center: [CitiesCoords.ekb.longitude, CitiesCoords.ekb.lattitude],
         zoom: 11,
@@ -48,6 +49,10 @@ export class RootStore {
             });
     }
 
+    setFilteredParkings(parkings: IParking[]) {
+        this.filteredParkings = parkings;
+    }
+
     setMapLocation(mapLocation: IMapLocation) {
         this.mapLocation = mapLocation;
     }
@@ -75,6 +80,36 @@ export class RootStore {
         this.currentSearch = currentSearch;
     }
 
+    setFilters(filters: IFilter) {
+        this.filters = filters;
+
+        this.setFilteredParkings(
+            this.parkings.filter((parking) => {
+                if (filters.disabled && parking.disabled_spaces === 0) return false;
+
+                if (filters.electro && parking.electro_spaces === 0) return false;
+
+                if (filters.camera && !parking.is_camera) return false;
+
+                if (filters.protected && !parking.is_protected) return false;
+
+                if (filters.favorite && !parking.is_favorite) return false;
+
+                if (filters.ratingMoreThan35 && parking.rating < 3.5) return false;
+
+                if (filters.ratingMoreThan4 && parking.rating < 4) return false;
+
+                if (filters.ratingMoreThan45 && parking.rating < 4.5) return false;
+
+                if (filters.minPrice && parking.price < filters.minPrice) return false;
+
+                if (filters.maxPrice && parking.price > filters.maxPrice) return false;
+
+                return true;
+            })
+        );
+    }
+
     toggleSearch() {
         this.isSearchOpened = !this.isSearchOpened;
     }
@@ -92,6 +127,7 @@ export class RootStore {
         });
 
         this.setParkings(parkings);
+        this.setFilteredParkings(this.parkings);
 
         this.setIsParkingsLoading(false);
 

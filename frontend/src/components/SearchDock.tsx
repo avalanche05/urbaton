@@ -56,7 +56,7 @@ const SearchDock = observer(() => {
 
                     <Col span={24}>
                         {searchHistory.map((address, index) => (
-                            <Row align={'top'} style={{ padding: '0 10px' }}>
+                            <Row key={index} align={'top'} style={{ padding: '0 10px' }}>
                                 <div className='history-icon'>
                                     <svg
                                         width='20'
@@ -66,8 +66,8 @@ const SearchDock = observer(() => {
                                         xmlns='http://www.w3.org/2000/svg'
                                     >
                                         <path
-                                            fill-rule='evenodd'
-                                            clip-rule='evenodd'
+                                            fillRule='evenodd'
+                                            clipRule='evenodd'
                                             d='M10 0C15.522 0 20 4.478 20 10C20 15.522 15.522 20 10 20C4.478 20 0 15.522 0 10C0 4.478 4.478 0 10 0ZM11 5H9V11.4142L12.2929 14.7071L13.7071 13.2929L11 10.585V5Z'
                                             fill='#ACB6C3'
                                         />

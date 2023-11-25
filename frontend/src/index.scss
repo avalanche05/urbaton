@@ -202,9 +202,53 @@
     }
 }
 
+.filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    &__button {
+        color: #6b7683 !important;
+        border: 1px solid #6b7683 !important;
+        border-radius: 30px !important;
+        background: #fff !important;
+        transition: all 0.3s ease !important;
+
+        &_active {
+            color: #fff !important;
+            border: 1px solid #0062ff !important;
+            background: #0062ff !important;
+        }
+    }
+}
+
 .line {
     width: 100%;
     height: 1px;
     background: #e9eef2;
     margin: 10px 0;
+}
+
+.details {
+    padding: 0 12px;
+    padding-bottom: 150px;
+
+    &__actions {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        box-sizing: border-box;
+
+        & button {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+    }
 }

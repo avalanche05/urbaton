@@ -6,13 +6,13 @@ const Search = () => {
 
     return (
         <>
-            <div
-                onClick={() => {
-                    rootStore.toggleSearch();
-                }}
-                className='search'
-            >
-                <div style={{ display: 'flex', width: '100%', gap: 8 }}>
+            <div className='search'>
+                <div
+                    onClick={() => {
+                        rootStore.toggleSearch();
+                    }}
+                    style={{ display: 'flex', width: '100%', gap: 8, cursor: 'pointer' }}
+                >
                     <div style={{ width: '100%' }} className='search-block'>
                         <div style={{ width: '100%' }} className='search-input'>
                             <Typography.Text className='search-input__text'>
@@ -24,7 +24,14 @@ const Search = () => {
                         </div>
                     </div>
 
-                    <div className='search-button'>
+                    <div
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            rootStore.toggleFilters();
+                        }}
+                        style={{ cursor: 'pointer' }}
+                        className='search-button'
+                    >
                         <svg
                             width='24'
                             height='24'

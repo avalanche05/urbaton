@@ -8,11 +8,15 @@ const ParkingList = observer(() => {
 
     return (
         <List>
-            {rootStore.parkings.map((parking) => (
+            {rootStore.filteredParkings.map((parking) => (
                 <List.Item key={parking.id}>
                     <ParkingGeneral parking={parking} />
                 </List.Item>
             ))}
+
+            {rootStore.filteredParkings.length === 0 && (
+                <div style={{ padding: 20 }}>Ничего не найдено</div>
+            )}
         </List>
     );
 });
