@@ -27,5 +27,5 @@ class Car(Base):
     )
     book_ids: Mapped[list['Book']] = relationship(
         secondary=association_table_book_car,
-        back_populates='car_ids'
+        back_populates='cars'
     )
