@@ -4,3 +4,4 @@ from .cars import *
 from .books import *
 from .parking import *
 from .places import *
+from .reviews import *

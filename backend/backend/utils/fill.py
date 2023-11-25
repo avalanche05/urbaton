@@ -1,57 +1,18 @@
+import requests
 import random
 
-from sqlalchemy.orm import Session
-from fastapi import Depends
+def fill_reviews():
+    session = requests.Session()
 
-from backend.dependencies import get_db
-from backend.models import Parking, Place
-
-
-def fill_db(arr: list):
-    db = next(get_db())
-    for parking in arr:
-        parkingDB = Parking(**parking)
-        db.add(parkingDB)
-    db.commit()
-
-
-def fill_places():
-    letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    numbers = "0123456789"
-    db = next(get_db())
-    parkings = db.query(Parking).all()
-
-    places = []
-    for parking in parkings:
-        # number = random letter + random num
-        for _ in range(parking.base_spaces):
-            number = random.choice(letters) + random.choice(numbers)
-            parking_type = "base"
-            places.append(Place(
-                number=number,
-                type=parking_type,
-                parking_id=parking.id
-            ))
-
-        for _ in range(parking.electro_spaces):
-            number = random.choice(letters) + random.choice(numbers)
-            parking_type = "electro"
-            places.append(Place(
-                number=number,
-                type=parking_type,
-                parking_id=parking.id
-            ))
-
-        for _ in range(parking.disabled_spaces):
-            number = random.choice(letters) + random.choice(numbers)
-            parking_type = "disabled"
-            places.append(Place(
-                number=number,
-                type=parking_type,
-                parking_id=parking.id
-            ))
-    db.add_all(places)
-    db.commit()
+    for i in range(1, 373):
+        session.post("http://localhost:8889/review/create", headers={"Authorization": "bearer R6UfwXPmSY"}, json={
+            "text": "Хорошая парковка",
+            "rating": random.randint(1, 5),
+            "tags": [
+                "Есть места"
+            ],
+            "parking_id": i
+        })
 
 
-fill_places()
+fill_reviews()
