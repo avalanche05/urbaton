@@ -1,12 +1,7 @@
-from typing import TYPE_CHECKING
-
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from backend.models import Base
-
-if TYPE_CHECKING:
-    from backend.models import Car, Book
+from backend.models import Base, association_is_favorite
 
 
 class User(Base):
@@ -27,6 +22,11 @@ class User(Base):
     tokens: Mapped[list['Token']] = relationship(
         cascade='all,delete-orphan',
         back_populates='user'
+    )
+
+    favorite_parkings: Mapped[list['Parking']] = relationship(
+        secondary=association_is_favorite,
+        back_populates='is_favorite'
     )
 
     def set_password(self, password):

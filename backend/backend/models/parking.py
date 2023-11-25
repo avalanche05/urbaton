@@ -1,14 +1,10 @@
 from typing import Dict, List, TYPE_CHECKING
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ARRAY, String
+from sqlalchemy import ARRAY, String, Table, Column, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 
-from backend.models import Base
-
-
-if TYPE_CHECKING:
-    from backend.models import Book
+from backend.models import Base, association_is_favorite
 
 
 class Parking(Base):
@@ -45,3 +41,7 @@ class Parking(Base):
     rating: Mapped[float] = mapped_column(nullable=False, default=0)
 
     books: Mapped[list['Book']] = relationship(back_populates='parking')
+    is_favorite: Mapped[list['User']] = relationship(
+        secondary=association_is_favorite,
+        back_populates='favorite_parkings'
+    )
