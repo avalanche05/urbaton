@@ -9,7 +9,6 @@ from backend.models import Base
 if TYPE_CHECKING:
     from backend.models import Car, Parking, User
 
-
 association_table_book_car = Table(
     "association_table_book_car",
     Base.metadata,
@@ -42,6 +41,8 @@ class Book(Base):
 
     parking: Mapped['Parking'] = relationship(back_populates='books')
     user: Mapped['User'] = relationship(back_populates='books')
-    car_ids: Mapped[list['Car']] = relationship(
+    cars: Mapped[list['Car']] = relationship(
         secondary=association_table_book_car, back_populates='book_ids'
     )
+
+
