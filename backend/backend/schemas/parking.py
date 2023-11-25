@@ -33,3 +33,17 @@ class Parking(BaseModel):
 class GetParkingList(BaseModel):
     address: Optional[str] = None,
     coordinates: Optional[PolygonPoint] = None,
+
+
+class LoadHour(BaseModel):
+    hour: str
+    load: str
+
+
+class DayLoad(BaseModel):
+    day: str
+    loadHours: list[LoadHour]
+
+
+class WorkLoad(BaseModel):
+    workLoad: list[DayLoad]

@@ -7,3 +7,4 @@ from .cars import Car  # noqa : F401
 from .parking import Parking  # noqa : F401
 from .books import Book # noqa : F401
 from .tokens import Token # noqa : F401
+from .places import Place  # noqa : F401
