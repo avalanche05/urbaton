@@ -1,6 +1,6 @@
 import datetime
 from pathlib import Path
-from typing import Annotated, List, Tuple
+from typing import Annotated, List, Tuple, Optional
 
 from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
@@ -15,7 +15,6 @@ parking_router = APIRouter(
     tags=['Parking']
 )
 
-
 WORKLOAD_INFERENCE = WorkloadInference(
     Path('resources/workload-model'),
     Path('resources/statistics.csv')
@@ -24,11 +23,12 @@ WORKLOAD_INFERENCE.load()
 
 
 @parking_router.post(path="/")
-def parking_list(db: Session = Depends(get_db)
+def parking_list(user_id: Optional[int] = None,
+                 db: Session = Depends(get_db),
                  ) -> list[schemas.Parking]:
-    db_parking_list = crud.get_parking_list(db, None)
+    db_parking_list, favorite_parking_ids = crud.get_parking_list(db, user_id)
 
-    return serializers.get_parkings(db_parking_list)
+    return serializers.get_parkings(db_parking_list, favorite_parking_ids)
 
 
 @parking_router.get(path="/geo")
@@ -43,3 +43,12 @@ def get_coordinates(address: str) -> schemas.PolygonPoint:
 @parking_router.get(path='/workload')
 def get_workload(zone_id: int, day_inside_week: datetime.date) -> schemas.WorkLoad:
     return WORKLOAD_INFERENCE.get_stats_at_week(zone_id, day_inside_week)
+
+
+@parking_router.post(path='/favorite')
+def add_to_favorite(
+        parking_id: int,
+        user: models.User = Depends(current_user),
+        db: Session = Depends(get_db)) -> schemas.Parking:
+    parking = crud.add_to_favorite(db, user, parking_id)
+    return serializers.get_parking(parking)

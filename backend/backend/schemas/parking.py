@@ -26,7 +26,7 @@ class Parking(BaseModel):
     is_camera: bool
     is_protected: bool
     tags: list[str]
-    rating: int
+    rating: float
     is_favorite: bool
 
 
