@@ -43,3 +43,13 @@ def get_coordinates(address: str) -> schemas.PolygonPoint:
 @parking_router.get(path='/workload')
 def get_workload(zone_id: int, day_inside_week: datetime.date) -> schemas.WorkLoad:
     return WORKLOAD_INFERENCE.get_stats_at_week(zone_id, day_inside_week)
+
+
+@parking_router.post(path='/favorite')
+def add_to_favorite(
+        parking_id: int,
+        user: models.User = Depends(current_user),
+        db: Session = Depends(get_db)) -> schemas.Parking:
+
+    parking = crud.add_to_favorite(db, user, parking_id)
+    return parking
