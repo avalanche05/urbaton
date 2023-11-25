@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from backend.models import Base
 
 if TYPE_CHECKING:
-    from backend.models import Car
+    from backend.models import Car, Book
 
 
 class User(Base):
@@ -20,6 +20,9 @@ class User(Base):
     cars: Mapped[list['Car']] = relationship(
         cascade='all,delete-orphan',
         back_populates='owner'
+    )
+    books: Mapped[list['Book']] = relationship(
+        back_populates='user'
     )
 
     def set_password(self, password):

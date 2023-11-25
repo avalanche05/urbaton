@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from backend.models import Base
-from credentials import POSTGRES_USER, POSTGRES_PORT, POSTGRES_SERVER, POSTGRES_DB, POSTGRES_PASSWORD
+from credentials import POSTGRES_USER, POSTGRES_PORT, POSTGRES_SERVER, POSTGRES_DB, POSTGRES_PASSWORD  # noqa : E501
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
