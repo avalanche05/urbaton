@@ -9,8 +9,9 @@ def get_url():
     user = settings.POSTGRES_USER
     password = settings.POSTGRES_PASSWORD
     host = settings.POSTGRES_SERVER
+    port = settings.POSTGRES_PORT
     db = settings.POSTGRES_DB
-    return f"postgresql://{user}:{password}@{host}/{db}"
+    return f"postgresql://{user}:{password}@{host}:{port}/{db}"
 
 
 engine = create_engine(get_url())

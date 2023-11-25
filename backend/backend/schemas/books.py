@@ -1,6 +1,5 @@
 from datetime import datetime
 from pydantic import BaseModel
-from .users import User
 from .cars import Car
 
 
