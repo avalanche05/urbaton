@@ -1,4 +1,4 @@
-from backend.models import cars as db_model_book
+from backend.models import books as db_model_book
 from backend import schemas, serializers
 
 
@@ -13,3 +13,7 @@ def get_book(db_book: db_model_book.Book) -> schemas.Book:
     )
 
     return book
+
+
+def get_books(db_books: list[db_model_book]) -> list[schemas.Book]:
+    return [get_book(db_book) for db_book in db_books]

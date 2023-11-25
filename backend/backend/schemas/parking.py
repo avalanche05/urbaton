@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -26,3 +28,8 @@ class Parking(BaseModel):
     tags: list[str]
     rating: int
     is_favorite: bool
+
+
+class GetParkingList(BaseModel):
+    address: Optional[str] = None,
+    coordinates: Optional[PolygonPoint] = None,

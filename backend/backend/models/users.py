@@ -24,6 +24,10 @@ class User(Base):
     books: Mapped[list['Book']] = relationship(
         back_populates='user'
     )
+    tokens: Mapped[list['Token']] = relationship(
+        cascade='all,delete-orphan',
+        back_populates='user'
+    )
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)

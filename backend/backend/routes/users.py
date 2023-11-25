@@ -2,7 +2,7 @@ import itertools
 from typing import List
 
 from fastapi import APIRouter, Body, Depends, HTTPException, Response
-from requests import Session
+from sqlalchemy.orm import Session
 
 from backend import schemas, crud, serializers, errors, models
 from backend.dependencies import get_db, current_user
