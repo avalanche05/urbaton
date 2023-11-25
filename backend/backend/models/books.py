@@ -27,9 +27,16 @@ class Book(Base):
         nullable=False,
         default=datetime.utcnow
     )
+    place_id: Mapped[int] = mapped_column(
+        ForeignKey('places.id'),
+        nullable=True
+    )
 
     parking: Mapped['Parking'] = relationship(back_populates='books')
     user: Mapped['User'] = relationship(back_populates='books')
     cars: Mapped[list['Car']] = relationship(
         secondary=association_table_book_car, back_populates='book_ids'
+    )
+    place: Mapped['Place'] = relationship(
+        back_populates='books',
     )

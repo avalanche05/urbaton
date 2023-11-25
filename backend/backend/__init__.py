@@ -27,5 +27,7 @@ def create_app() -> FastAPI:
     _app.include_router(routes.books.book_router)
     _app.include_router(routes.cars.car_router)
     _app.include_router(routes.parking.parking_router)
+    _app.include_router(routes.places.place_router)
+    _app.include_router(routes.reviews.review_router)
 
     return _app

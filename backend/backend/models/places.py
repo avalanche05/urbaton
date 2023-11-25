@@ -16,14 +16,10 @@ class Place(Base):
         nullable=False
     )
 
-    book_id: Mapped[int] = mapped_column(
-        ForeignKey('books.id'),
-        nullable=True
-    )
-
     parking: Mapped['Parking'] = relationship(
         back_populates='places'
     )
-    book: Mapped['Book'] = relationship(
-        back_populates='place',
+    books: Mapped[list['Book']] = relationship(
+        cascade='all,delete-orphan',
+        back_populates='place'
     )

@@ -2,7 +2,7 @@ from backend.models import parking as db_model_parking
 from backend import schemas
 
 
-def get_parking(db_parking: db_model_parking.Parking) -> schemas.Parking:
+def get_parking(db_parking: db_model_parking.Parking, favourite_parking_ids: list[int] = []) -> schemas.Parking:
     parking = schemas.Parking(
         id=db_parking.id,
         address=db_parking.address,
@@ -23,12 +23,13 @@ def get_parking(db_parking: db_model_parking.Parking) -> schemas.Parking:
         is_protected=db_parking.is_protected,
         tags=db_parking.tags,
         rating=db_parking.rating,
-        is_favorite=False,
+        is_favorite=db_parking.id in favourite_parking_ids,
 
     )
 
     return parking
 
 
-def get_parkings(db_parkings: list[db_model_parking.Parking]) -> list[schemas.Parking]:
-    return [get_parking(db_parking) for db_parking in db_parkings]
+def get_parkings(db_parkings: list[db_model_parking.Parking], favourite_parking_ids: list[int] = []) -> list[
+    schemas.Parking]:
+    return [get_parking(db_parking, favourite_parking_ids) for db_parking in db_parkings]
