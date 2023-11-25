@@ -14,10 +14,11 @@ car_router = APIRouter(
 
 
 @car_router.post(path="/create")
-def create_cfa_image(car_create: schemas.CarCreateRequest = Body(...),
-                     user: models.User = Depends(current_user),
-                     db: Session = Depends(get_db)
-                     ) -> schemas.Car:
+def create_car(
+    car_create: schemas.CarCreateRequest = Body(...),
+    user: models.User = Depends(current_user),
+    db: Session = Depends(get_db)
+) -> schemas.Car:
     db_car = crud.create_car(db, car_create, user)
 
     return serializers.get_car(db_car)
