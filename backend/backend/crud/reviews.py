@@ -16,6 +16,10 @@ def create_review(db: Session, db_user: models.User, create_review: schemas.Revi
     db_parking.review_count += 1
     db_parking.rating = (db_parking.rating * (
                 db_parking.review_count - 1) + create_review.rating) / db_parking.review_count
+
+    if create_review.tags:
+        db_parking.tags = list(set(db_parking.tags + create_review.tags))
+
     db.add(db_parking)
     db_review = models.Review(
         text=create_review.text,
