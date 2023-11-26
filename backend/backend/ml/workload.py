@@ -93,8 +93,9 @@ class WorkloadInference:
         cat_fts = _gen_categorical_features(relevant).iloc[[-1]]
         pred_linear = self._models[zone].linear.predict(linear_fts).item()
         cb_df = pd.concat([linear_fts, cat_fts], axis='columns')
+        cb_df['linreg'] = pred_linear
         pred_cb = self._models[zone].boosting.predict(cb_df).item()
-        result = round(pred_linear + pred_cb)
+        result = max(0, round(pred_cb))
         self._statistics[zone][at] = result
 
     def predict_up_to_item(self, zone: int, at: dt.datetime):
