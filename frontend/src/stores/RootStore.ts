@@ -11,6 +11,7 @@ import { mapCoordsToString } from '../utils/mapCoordsToString';
 import { mapRouteToCoords } from '../utils/mapRouteToCoords';
 import { ReviewsApiServiceInstanse } from '../api/ReviewsApiService';
 import { ICreateReviewBody } from '../api/models/IReview';
+import { PredictApiServiceInstanse } from '../api/PredictApiServcie';
 
 export class RootStore {
     parkings: IParking[] = [];
@@ -262,5 +263,9 @@ export class RootStore {
 
     async createReview(body: ICreateReviewBody) {
         return ReviewsApiServiceInstanse.createReview(body);
+    }
+
+    async getWorkload() {
+        return PredictApiServiceInstanse.getParkingWorkload();
     }
 }

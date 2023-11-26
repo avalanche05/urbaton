@@ -109,6 +109,15 @@ const Booking = observer(({ floatPanelRef }: Props) => {
         return current && current < dayjs().endOf('day');
     };
 
+    const calculatePrice = (time1: string, time2: string) => {
+        const date1 = new Date(time1);
+        const date2 = new Date(time2);
+
+        const differenceInMilliseconds = date2.getTime() - date1.getTime();
+        const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
+        return Math.round(differenceInHours) * 30;
+    };
+
     return (
         <>
             {contextHolder}
@@ -203,9 +212,21 @@ const Booking = observer(({ floatPanelRef }: Props) => {
 
                 <div className='details__actions'>
                     <Col>
-                        <AdmiralButton style={{ opacity: 0 }}>Записаться в отделение</AdmiralButton>
+                        <AdmiralButton
+                            disabled={true}
+                            style={{ opacity: 1, backgroundColor: 'black', color: 'white' }}
+                        >
+                            {!timeRange
+                                ? 'Введите время брони'
+                                : `Стоимость парковки ${calculatePrice(
+                                      timeRange[0],
+                                      timeRange[1]
+                                  )} ₽`}
+                            `
+                        </AdmiralButton>
 
                         <AdmiralButton
+                            disabled={!timeRange}
                             onClick={() => {
                                 setIsLoading(true);
 

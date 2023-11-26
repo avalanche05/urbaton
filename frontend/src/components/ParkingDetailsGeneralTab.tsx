@@ -7,58 +7,26 @@ import { observer } from 'mobx-react-lite';
 import WorkLoad from './WorkLoad';
 import AuthService from '../api/AuthService';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 type Props = {
     parking: IParking;
 };
 
-const workLoadMock: IWorkload[] = [
-    {
-        day: 'Понедельник',
-        loadHours: [
-            { hour: '10', load: 10 },
-            { hour: '11', load: 20 },
-        ],
-    },
-    {
-        day: 'Вторник',
-        loadHours: [
-            { hour: '10', load: 10 },
-            { hour: '11', load: 30 },
-        ],
-    },
-    {
-        day: 'Среда',
-        loadHours: [
-            { hour: '00-01', load: 10 },
-            { hour: '01-02', load: 50 },
-        ],
-    },
-    {
-        day: 'Четверг',
-        loadHours: [
-            { hour: '00-01', load: 10 },
-            { hour: '01-02', load: 2 },
-        ],
-    },
-    {
-        day: 'Пятница',
-        loadHours: [
-            { hour: '00-01', load: 6 },
-            { hour: '01-02', load: 20 },
-        ],
-    },
-    {
-        day: 'Суббота',
-        loadHours: [
-            { hour: '00-01', load: 1 },
-            { hour: '01-02', load: 20 },
-        ],
-    },
-];
-
 const ParkingDetailsGeneralTab = observer(({ parking }: Props) => {
     const { rootStore } = useStores();
+    const [workLoad, setWorkLoad] = useState<IWorkload[]>([]);
+
+    useEffect(() => {
+        async function fetchWorkload() {
+            const response = await rootStore.getWorkload();
+            console.log(response);
+
+            setWorkLoad(response.workLoad);
+        }
+
+        fetchWorkload();
+    }, [rootStore]);
 
     return (
         <>
@@ -238,7 +206,7 @@ const ParkingDetailsGeneralTab = observer(({ parking }: Props) => {
                                     </>
                                 }
                             >
-                                <WorkLoad workLoad={workLoadMock} />
+                                {workLoad.length > 0 ? <WorkLoad workLoad={workLoad} /> : null}
                             </AccordionItem>
 
                             <AccordionItem
