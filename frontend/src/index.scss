@@ -292,3 +292,39 @@
     background: var(--light_light_grey, #ebedf5);
     box-sizing: border-box;
 }
+
+.profile-page {
+    padding: 20px 12px;
+
+    .search-button {
+        display: flex;
+        padding: 12px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 12px;
+        border: 1px solid var(--black_1, rgba(0, 0, 0, 0.01));
+        background: #fff;
+
+        /* shadow */
+        box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.12);
+        cursor: pointer;
+    }
+
+    .balance-block {
+        display: flex;
+        padding: 8px 16px;
+        justify-content: start;
+        align-items: flex-start;
+        gap: 20px;
+        border-radius: 20px;
+        background: var(--back_blue, rgba(30, 75, 210, 0.08));
+
+        &__balance {
+            color: var(--dark-blue, #1e4bd2);
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+        }
+    }
+}

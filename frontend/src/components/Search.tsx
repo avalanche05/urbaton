@@ -43,6 +43,23 @@ const Search = () => {
                         </div>
                     </Link>
 
+                    <Link to='/profile' style={{ color: '#fff' }}>
+                        <div style={{ cursor: 'pointer' }} className='search-button'>
+                            <svg
+                                width='24'
+                                height='24'
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                xmlns='http://www.w3.org/2000/svg'
+                            >
+                                <path
+                                    d='M12 11.6273C13.0028 11.6273 13.9646 11.2289 14.6737 10.5198C15.3828 9.81069 15.7811 8.84894 15.7811 7.84613C15.7811 6.84331 15.3828 5.88157 14.6737 5.17247C13.9646 4.46337 13.0028 4.065 12 4.065C10.9972 4.065 10.0354 4.46337 9.32634 5.17247C8.61724 5.88157 8.21887 6.84331 8.21887 7.84613C8.21887 8.84894 8.61724 9.81069 9.32634 10.5198C10.0354 11.2289 10.9972 11.6273 12 11.6273ZM12 13.2885C6.97275 13.2885 3.75 16.0628 3.75 17.4135V19.9358H20.25V17.4135C20.25 15.78 17.199 13.2885 12 13.2885Z'
+                                    fill='#092896'
+                                />
+                            </svg>
+                        </div>
+                    </Link>
+
                     <div
                         onClick={() => {
                             rootStore.toggleSearch();
@@ -53,7 +70,7 @@ const Search = () => {
                         <div style={{ width: '100%' }} className='search-input'>
                             <Typography.Text className='search-input__text'>
                                 {rootStore.currentSearch
-                                    .slice(0, 35)
+                                    .slice(0, 17)
                                     .concat(rootStore.currentSearch.length > 35 ? '...' : '') ||
                                     'Введите адрес'}
                             </Typography.Text>
