@@ -78,4 +78,4 @@ ENV FASTAPI_ENV=production
 COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 COPY backend ./backend/backend
 WORKDIR /app
-    CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "--workers", "4", "-b", "0.0.0.0:8000", "backend.main:app"]
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "--workers", "4", "-b", "0.0.0.0:8000", "backend.main:app"]
