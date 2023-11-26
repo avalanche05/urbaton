@@ -1,9 +1,11 @@
 import { makeAutoObservable } from 'mobx';
 import { IFilter, IGeo, IMapLocation } from '../models';
-import { IParking } from '../api/models';
+import { ICar, ICreateCarBody, IParking } from '../api/models';
 import { ParkingsApiServiceInstanse } from '../api/ParkingsApiService';
 import { CitiesCoords } from '../contants';
 import { getDistance } from '../utils/GeoUtils';
+import { UserApiServiceInstanse } from '../api/UserApiService';
+import { IUser } from '../api/models/IUser';
 
 export class RootStore {
     parkings: IParking[] = [];
@@ -17,8 +19,10 @@ export class RootStore {
     activeParking: IParking | null = null;
     isSearchOpened: boolean | null = null;
     isFiltersOpened: boolean | null = null;
+    isBookingOpened: boolean | null = null;
     isParkingsLoading: boolean = false;
     currentSearch: string = '';
+    userProfile: IUser | null = null;
 
     constructor() {
         makeAutoObservable(this);
@@ -110,12 +114,20 @@ export class RootStore {
         );
     }
 
+    setUserProfile(userProfile: IUser) {
+        this.userProfile = userProfile;
+    }
+
     toggleSearch() {
         this.isSearchOpened = !this.isSearchOpened;
     }
 
     toggleFilters() {
         this.isFiltersOpened = !this.isFiltersOpened;
+    }
+
+    toggleBooking() {
+        this.isBookingOpened = !this.isBookingOpened;
     }
 
     async fetchParkings() {
@@ -150,5 +162,43 @@ export class RootStore {
         this.setIsParkingsLoading(false);
 
         return parkings;
+    }
+
+    async fetchUserProfile() {
+        const userProfile = await UserApiServiceInstanse.getUserProfile();
+
+        this.setUserProfile(userProfile);
+    }
+
+    async deposit(value: number): Promise<void> {
+        return UserApiServiceInstanse.deposit(value);
+    }
+
+    async bookParking(
+        parking_id: number,
+        time_start: string,
+        time_end: string,
+        cars: ICar[],
+        place_id: number
+    ) {
+        return UserApiServiceInstanse.bookParking({
+            parking_id,
+            time_start,
+            time_end,
+            cars,
+            place_id,
+        });
+    }
+
+    async createCar(body: ICreateCarBody) {
+        return UserApiServiceInstanse.createCar(body);
+    }
+
+    async getPlaces(parking_id: number, time_start: string, time_end: string) {
+        return ParkingsApiServiceInstanse.getPlaces({
+            parking_id,
+            time_start,
+            time_end,
+        });
     }
 }

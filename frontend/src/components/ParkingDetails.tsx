@@ -5,9 +5,10 @@ import { Button, Col, Row, Typography, notification } from 'antd';
 import { useStores } from '../hooks/useStores';
 import { LeftOutlined } from '@ant-design/icons';
 import { Button as AdmiralButton } from '@admiral-ds/react-ui';
-import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import WorkLoad from './WorkLoad';
+import AuthService from '../api/AuthService';
+import { Link } from 'react-router-dom';
 
 type Props = {
     parking: IParking;
@@ -61,7 +62,6 @@ const workLoadMock: IWorkload[] = [
 const ParkingDetails = observer(({ parking }: Props) => {
     const { rootStore } = useStores();
     const [, contextHolder] = notification.useNotification();
-    const [isLoading] = useState<boolean>(false);
 
     return (
         <>
@@ -131,68 +131,80 @@ const ParkingDetails = observer(({ parking }: Props) => {
                             </AccordionItem>
 
                             <Row style={{ marginTop: 20, marginBottom: 20 }} gutter={[8, 8]}>
-                                <Col span={12}>
-                                    <div className='parking__free-spaces parking__free-spaces_high parking__free-spaces_center'>
-                                        <Row align={'middle'}>
-                                            <span className='free-spaces'>
-                                                {parking.base_spaces - parking.busy_base_spaces}
-                                            </span>
-                                            <span className='total-spaces'>
-                                                / {parking.base_spaces}
-                                            </span>
-                                        </Row>
+                                {parking.base_spaces ? (
+                                    <Col span={parking.disabled_spaces ? 12 : 24}>
+                                        <div
+                                            className={`parking__free-spaces parking__free-spaces_high ${
+                                                parking.disabled_spaces
+                                                    ? 'parking__free-spaces_center'
+                                                    : ''
+                                            }`}
+                                        >
+                                            <Row align={'middle'}>
+                                                <span className='free-spaces'>
+                                                    {parking.base_spaces - parking.busy_base_spaces}
+                                                </span>
+                                                <span className='total-spaces'>
+                                                    / {parking.base_spaces}
+                                                </span>
+                                            </Row>
 
-                                        <Typography.Text className='base-text'>
-                                            Свободных мест
-                                        </Typography.Text>
-                                    </div>
-                                </Col>
+                                            <Typography.Text className='base-text'>
+                                                Свободных мест
+                                            </Typography.Text>
+                                        </div>
+                                    </Col>
+                                ) : null}
 
-                                <Col span={12}>
-                                    <div className='parking__free-spaces parking__free-spaces_high parking__free-spaces_center'>
-                                        <Row align={'middle'}>
-                                            <span className='free-spaces'>
-                                                {parking.disabled_spaces -
-                                                    parking.busy_disabled_spaces}
-                                            </span>
-                                            <span className='total-spaces '>
-                                                / {parking.disabled_spaces}
-                                            </span>
-                                        </Row>
+                                {parking.disabled_spaces ? (
+                                    <Col span={12}>
+                                        <div className='parking__free-spaces parking__free-spaces_high parking__free-spaces_center'>
+                                            <Row align={'middle'}>
+                                                <span className='free-spaces'>
+                                                    {parking.disabled_spaces -
+                                                        parking.busy_disabled_spaces}
+                                                </span>
+                                                <span className='total-spaces '>
+                                                    / {parking.disabled_spaces}
+                                                </span>
+                                            </Row>
 
-                                        <Typography.Text className='base-text'>
-                                            Свободных мест для инвалидов
-                                        </Typography.Text>
+                                            <Typography.Text className='base-text'>
+                                                Свободных мест для инвалидов
+                                            </Typography.Text>
+                                        </div>
+                                    </Col>
+                                ) : null}
+
+                                <Col span={24}>
+                                    <div className='parking__free-spaces'>
+                                        {parking.electro_spaces ? (
+                                            <>
+                                                <Row align={'middle'}>
+                                                    <span className='free-spaces'>
+                                                        {parking.electro_spaces -
+                                                            parking.busy_electro_spaces}
+                                                    </span>
+                                                    <span className='total-spaces'>
+                                                        / {parking.electro_spaces}
+                                                    </span>
+                                                </Row>
+                                                <Typography.Text className='base-text'>
+                                                    Свободных мест для электромобилей
+                                                </Typography.Text>
+                                            </>
+                                        ) : (
+                                            <Typography.Text className='base-text'>
+                                                Нет мест для электромобилей
+                                            </Typography.Text>
+                                        )}
                                     </div>
                                 </Col>
 
                                 <Col span={24}>
                                     <div className='parking__free-spaces'>
-                                        <Row align={'middle'}>
-                                            <span className='free-spaces'>
-                                                {parking.electro_spaces -
-                                                    parking.busy_electro_spaces}
-                                            </span>
-                                            <span className='total-spaces'>
-                                                / {parking.electro_spaces}
-                                            </span>
-                                        </Row>
-
                                         <Typography.Text className='base-text'>
-                                            Свободных мест для электромобилей
-                                        </Typography.Text>
-                                    </div>
-                                </Col>
-
-                                <Col span={24}>
-                                    <div className='parking__free-spaces'>
-                                        <Row align={'middle'}>
-                                            <span className='free-spaces'>0</span>
-                                            <span className='total-spaces'>/ 0</span>
-                                        </Row>
-
-                                        <Typography.Text className='base-text'>
-                                            Свободных мест для грузовиков
+                                            Нет мест для грузовиков
                                         </Typography.Text>
                                     </div>
                                 </Col>
@@ -400,48 +412,19 @@ const ParkingDetails = observer(({ parking }: Props) => {
 
                     <div className='parking__details__actions'>
                         <Col>
+                            <span>
+                                {!AuthService.isAuthorized() ? (
+                                    <>
+                                        Бронирование доступно только после{' '}
+                                        <Link to='/login'>авторизации</Link>
+                                    </>
+                                ) : null}
+                            </span>
                             <AdmiralButton
-                                loading={isLoading}
-                                // onClick={() => {
-                                //     setIsLoading(true);
-
-                                //     rootStore
-                                //         .createAppointment(selectedTime)
-                                //         .then((ticket) => {
-                                //             api.info({
-                                //                 message: 'Вы записаны на ' + selectedTime,
-                                //                 description: (
-                                //                     <div>
-                                //                         <div>
-                                //                             Время на дорогу:{' '}
-                                //                             {Math.ceil(
-                                //                                 ticket ? ticket?.estimatedTimeWalk / 60 : 0
-                                //                             )}{' '}
-                                //                             минут пешком. Или{' '}
-                                //                             {Math.ceil(
-                                //                                 ticket ? ticket?.estimatedTimeCar / 60 : 0
-                                //                             )}{' '}
-                                //                             минут на машине
-                                //                         </div>
-                                //                     </div>
-                                //                 ),
-                                //                 placement: 'topRight',
-                                //             });
-                                //         })
-                                //         .catch((error) => {
-                                //             console.log(error);
-                                //             api.error({
-                                //                 message: 'Ошибка записи',
-                                //                 description: (
-                                //                     <div>Попробуйте записаться на другое время</div>
-                                //                 ),
-                                //                 placement: 'topRight',
-                                //             });
-                                //         })
-                                //         .finally(() => {
-                                //             setIsLoading(false);
-                                //         });
-                                // }}
+                                onClick={() => {
+                                    rootStore.toggleBooking();
+                                }}
+                                disabled={!AuthService.isAuthorized()}
                             >
                                 Забронировать место
                             </AdmiralButton>

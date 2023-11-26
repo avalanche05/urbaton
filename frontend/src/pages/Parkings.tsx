@@ -9,11 +9,20 @@ import Dock from '../components/Dock';
 import Search from '../components/Search';
 import SearchDock from '../components/SearchDock';
 import FiltersDock from '../components/FiltersDock';
+import BookingDock from '../components/BookingDock';
 
 const Parkings = observer(() => {
     const [YMaps, setYMaps] = useState(<div />);
     const map = useRef(null);
     const { rootStore } = useStores();
+
+    useEffect(() => {
+        async function fetchUserProfile() {
+            await rootStore.fetchUserProfile();
+        }
+
+        fetchUserProfile();
+    }, [rootStore]);
 
     useEffect(() => {
         async function fetchParkings() {
@@ -137,13 +146,17 @@ const Parkings = observer(() => {
 
     return (
         <>
-            <div style={{ width: '100%', height: '100vh' }}>{YMaps}</div>
+            <div className='parkings-page'>
+                <div style={{ width: '100%', height: '100vh' }}>{YMaps}</div>
 
-            <Dock />
+                <Dock />
 
-            <Search />
-            <SearchDock />
-            <FiltersDock />
+                <Search />
+                <SearchDock />
+                <FiltersDock />
+
+                <BookingDock></BookingDock>
+            </div>
         </>
     );
 });

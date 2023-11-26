@@ -1,19 +1,55 @@
+import { Link } from 'react-router-dom';
 import { useStores } from '../hooks/useStores';
 import { Typography } from 'antd';
+import AuthService from '../api/AuthService';
 
 const Search = () => {
     const { rootStore } = useStores();
 
+    const logout = () => {
+        AuthService.logout();
+
+        setTimeout(() => {
+            window.location.href = '/login';
+        }, 100);
+    };
+
     return (
         <>
             <div className='search'>
-                <div
-                    onClick={() => {
-                        rootStore.toggleSearch();
-                    }}
-                    style={{ display: 'flex', width: '100%', gap: 8, cursor: 'pointer' }}
-                >
-                    <div style={{ width: '100%' }} className='search-block'>
+                <div style={{ display: 'flex', width: '100%', gap: 8, cursor: 'pointer' }}>
+                    <Link onClick={logout} to='/login' style={{ color: '#fff' }}>
+                        <div
+                            onClick={() => {
+                                rootStore.toggleFilters();
+                            }}
+                            style={{ cursor: 'pointer' }}
+                            className='search-button'
+                        >
+                            <svg
+                                width='24'
+                                height='24'
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                xmlns='http://www.w3.org/2000/svg'
+                            >
+                                <path
+                                    d='M11 20L21 20V3.99998L11 3.99997M3 12H14M14 12L11 15M14 12L11 8.99997'
+                                    stroke='#1E4BD2'
+                                    strokeWidth='2'
+                                    strokeLinecap='square'
+                                />
+                            </svg>
+                        </div>
+                    </Link>
+
+                    <div
+                        onClick={() => {
+                            rootStore.toggleSearch();
+                        }}
+                        style={{ width: '100%' }}
+                        className='search-block'
+                    >
                         <div style={{ width: '100%' }} className='search-input'>
                             <Typography.Text className='search-input__text'>
                                 {rootStore.currentSearch
