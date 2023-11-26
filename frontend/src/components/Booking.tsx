@@ -97,6 +97,8 @@ const Booking = observer(({ floatPanelRef }: Props) => {
         value: DatePickerProps['value'] | RangePickerProps['value'],
         dateString: [string, string] | string
     ) => {
+        console.log(value);
+
         setTimeRange(dateString as [string, string]);
     };
 

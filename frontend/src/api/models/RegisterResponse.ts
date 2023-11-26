@@ -1,6 +1,6 @@
-import { User } from '../../models/User';
+import { IUser } from '.';
 
 export interface RegisterResponse {
     bearer_token: string;
-    user: User;
+    user: IUser;
 }
