@@ -19,7 +19,7 @@ def create_book(
     user: models.User = Depends(current_user),
     db: Session = Depends(get_db)
 ) -> schemas.Book:
-
+    
     db_book = crud.create_book(db, book_create, user)
 
     return serializers.get_book(db_book)

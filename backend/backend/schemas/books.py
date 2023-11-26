@@ -9,6 +9,7 @@ class Book(BaseModel):
     id: int
     user_id: int
     parking_id: int
+    place_id: int | None
     time_start: datetime
     time_end: datetime
     cars: list[Car]

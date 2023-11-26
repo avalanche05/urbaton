@@ -1,7 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
+
 from backend import models, schemas, crud
+from backend.errors import PlaceUnavailable
 
 
 def create_book(db: Session, payload: schemas.BookCreateRequest, db_user: models.User) -> models.Book:
@@ -12,6 +14,7 @@ def create_book(db: Session, payload: schemas.BookCreateRequest, db_user: models
         raise Exception('Parking not found')
 
     calculated_price = db_parking.price * (payload.time_end - payload.time_start).total_seconds() // 3600
+
 
     if db_user.balance < calculated_price:
         raise Exception('Not enough money')
@@ -55,43 +58,41 @@ def create_book(db: Session, payload: schemas.BookCreateRequest, db_user: models
     db.add(db_parking)
 
     if payload.place_id is None:
-        number = book_uncertain_place(db, payload.parking_id, payload.place_id, payload.time_start, payload.time_end)
+        number = book_uncertain_place(db, payload.parking_id, payload.time_start, payload.time_end)
         if number is not None:
             db_book = models.Book(
                 user_id=db_user.id,
                 parking_id=payload.parking_id,
-                time_start=payload.time_start,
-                time_end=payload.time_start,
+                time_start=payload.time_start.replace(tzinfo=timezone.utc),
+                time_end=payload.time_start.replace(tzinfo=timezone.utc),
                 place_id=number
             )
         else:
-            raise Exception('Place reserved')
+            raise PlaceUnavailable('Place reserved')
     else:
         db_book = models.Book(
             user_id=db_user.id,
             parking_id=payload.parking_id,
-            time_start=payload.time_start,
-            time_end=payload.time_start,
+            time_start=payload.time_start.replace(tzinfo=timezone.utc),
+            time_end=payload.time_start.replace(tzinfo=timezone.utc),
             place_id=payload.place_id
         )
-
     db.add(db_book)
     db.commit()
     db.refresh(db_book)
-
     return db_book
 
 
-def book_uncertain_place(db: Session, parking_id: int, time_start: datetime, time_end: datetime) -> str | None:
+def book_uncertain_place(db: Session, parking_id: int, time_start: datetime, time_end: datetime) -> int | None:
     places = crud.places.places_by_parking(db, parking_id)
-
     for place in places:
         found = True
         for book in place.books:
-            if time_start >= book.time_end or time_end <= book.time_start:
+            if time_start.replace(tzinfo=timezone.utc) >= book.time_end.replace(tzinfo=timezone.utc) or time_end.replace(tzinfo=timezone.utc) <= book.time_start.replace(tzinfo=timezone.utc):
                 found = False
                 break
         if found:
-            return place.number
+            print(place.id)
+            return place.id
 
     return None
