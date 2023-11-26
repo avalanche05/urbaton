@@ -85,9 +85,9 @@ docker-compose up --build
 
 - [Женя, Frontend](https://t.me/shmate)
 
-- [Ваня, Backend](https://t.me/mrapplexz)
+- [Максим, ML](https://t.me/mrapplexz)
 
-- [Максим, ML]([https://t.me/nizhgo](https://t.me/avalanche05))
+- [Ваня, Backend](https://t.me/avalanche05)
 
 
 ## Контакты
