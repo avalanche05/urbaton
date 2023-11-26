@@ -14,7 +14,7 @@ place_router = APIRouter(
 )
 
 
-@place_router.get(path="/")
+@place_router.get(path="")
 def places_by_parking_id(
         parking_id: int,
         time_start: datetime,

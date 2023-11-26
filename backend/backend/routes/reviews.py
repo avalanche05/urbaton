@@ -21,7 +21,7 @@ def create_review(db: Session = Depends(get_db),
     return serializers.get_review(db_review)
 
 
-@review_router.get(path="/")
+@review_router.get(path="")
 def get_reviews(parking_id: int,
                 db: Session = Depends(get_db),
                 skip: int = 0,
