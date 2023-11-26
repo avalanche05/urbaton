@@ -16,7 +16,8 @@ ENV PYTHONUNBUFFERED=1 \
     POETRY_VERSION=1.6.1 \
     # make poetry install to this location
     POETRY_HOME="/opt/poetry" \
-    # make poetry create the virtual environment in the project's root
+    # make poetry create the virtual environment in the proj    PYSETUP_PATH="/opt/pysetup" \
+ect's root
     # it gets named `.venv`
     POETRY_VIRTUALENVS_IN_PROJECT=true \
     # do not ask any interactive question

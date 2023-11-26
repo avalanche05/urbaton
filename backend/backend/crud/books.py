@@ -1,5 +1,7 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session
-from backend import models, schemas
+from backend import models, schemas, crud
 
 
 def create_book(db: Session, payload: schemas.BookCreateRequest, db_user: models.User) -> models.Book:
@@ -10,12 +12,6 @@ def create_book(db: Session, payload: schemas.BookCreateRequest, db_user: models
         raise Exception('Parking not found')
 
     calculated_price = db_parking.price * (payload.time_end - payload.time_start).total_seconds() // 3600
-
-    print(db_parking.price)
-    print(payload.time_end)
-    print(payload.time_start)
-    print(payload.time_end - payload.time_start)
-    print(calculated_price)
 
     if db_user.balance < calculated_price:
         raise Exception('Not enough money')
@@ -58,15 +54,44 @@ def create_book(db: Session, payload: schemas.BookCreateRequest, db_user: models
     db_parking.busy_disabled_spaces += booked_disabled_spaces
     db.add(db_parking)
 
-    db_book = models.Book(
-        user_id=db_user.id,
-        parking_id=payload.parking_id,
-        time_start=payload.time_start,
-        time_end=payload.time_start,
-        place_id=payload.place_id,
-    )
+    if payload.place_id is None:
+        number = book_uncertain_place(db, payload.parking_id, payload.place_id, payload.time_start, payload.time_end)
+        if number is not None:
+            db_book = models.Book(
+                user_id=db_user.id,
+                parking_id=payload.parking_id,
+                time_start=payload.time_start,
+                time_end=payload.time_start,
+                place_id=number
+            )
+        else:
+            raise Exception('Place reserved')
+    else:
+        db_book = models.Book(
+            user_id=db_user.id,
+            parking_id=payload.parking_id,
+            time_start=payload.time_start,
+            time_end=payload.time_start,
+            place_id=payload.place_id
+        )
+
     db.add(db_book)
     db.commit()
     db.refresh(db_book)
 
     return db_book
+
+
+def book_uncertain_place(db: Session, parking_id: int, time_start: datetime, time_end: datetime) -> str | None:
+    places = crud.places.places_by_parking(db, parking_id)
+
+    for place in places:
+        found = True
+        for book in place.books:
+            if time_start >= book.time_end or time_end <= book.time_start:
+                found = False
+                break
+        if found:
+            return place.number
+
+    return None

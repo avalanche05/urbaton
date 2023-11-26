@@ -17,3 +17,8 @@ def places_by_parking_id(db: Session, parking_id: int, time_start: datetime, tim
         busy_place_ids.add(book.place_id)
 
     return db_places, busy_place_ids
+
+
+def places_by_parking(db: Session, parking_id: int):
+    db_places = db.query(models.Place).filter(models.Place.parking_id == parking_id).all()
+    return db_places
