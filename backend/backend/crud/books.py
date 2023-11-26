@@ -11,22 +11,19 @@ def create_book(db: Session, payload: schemas.BookCreateRequest, db_user: models
 
     calculated_price = db_parking.price * (payload.time_end - payload.time_start).total_seconds() // 3600
 
-    print(db_parking.price)
-    print(payload.time_end)
-    print(payload.time_start)
-    print(payload.time_end - payload.time_start)
-    print(calculated_price)
-
     if db_user.balance < calculated_price:
         raise Exception('Not enough money')
     count_base = 0
     count_disabled = 0
     count_electro = 0
 
+    cars = []
     for car_id in payload.car_ids:
         car = db.query(models.Car).filter(models.Car.id == car_id).first()
         if car is None:
             raise Exception('Car not found')
+
+        cars.append(car)
         if car.type == 'base':
             count_base += 1
         elif car.type == 'disabled':
@@ -64,6 +61,7 @@ def create_book(db: Session, payload: schemas.BookCreateRequest, db_user: models
         time_start=payload.time_start,
         time_end=payload.time_start,
         place_id=payload.place_id,
+        cars=cars,
     )
     db.add(db_book)
     db.commit()

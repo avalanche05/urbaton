@@ -22,7 +22,7 @@ WORKLOAD_INFERENCE = WorkloadInference(
 WORKLOAD_INFERENCE.load()
 
 
-@parking_router.post(path="/")
+@parking_router.post(path="")
 def parking_list(user_id: Optional[int] = None,
                  db: Session = Depends(get_db),
                  ) -> list[schemas.Parking]:
