@@ -13,7 +13,7 @@ export function mapGeoArrayToLineString(
             coordinates: geoArray.map((geo) => [geo.longitude, geo.latitude]),
         },
         style: {
-            stroke: [{ color: parking.id === activeParking?.id ? 'red' : '#092896', width: 4 }],
+            stroke: [{ color: parking.id === activeParking?.id ? 'red' : '#7ed73f', width: 4 }],
         },
     };
 }

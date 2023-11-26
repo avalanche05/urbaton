@@ -29,6 +29,16 @@ export class ParkingsApiService {
 
         return response.data;
     }
+
+    public async getGeoLocation(address: string) {
+        const response = await axios.get<IGeo>(`${API_URL}/parking/geo`, {
+            params: {
+                address,
+            },
+        });
+
+        return response.data;
+    }
 }
 
 export const ParkingsApiServiceInstanse = new ParkingsApiService();

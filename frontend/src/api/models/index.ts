@@ -6,3 +6,4 @@ export * from './IBook';
 export * from './ICar';
 export * from './IPlace';
 export * from './IUser';
+export * from './IRoute';

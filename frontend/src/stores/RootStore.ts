@@ -1,11 +1,14 @@
 import { makeAutoObservable } from 'mobx';
-import { IFilter, IGeo, IMapLocation } from '../models';
+import { IFilter, IGeo, ILineString, IMapLocation } from '../models';
 import { ICar, ICreateCarBody, IParking } from '../api/models';
 import { ParkingsApiServiceInstanse } from '../api/ParkingsApiService';
 import { CitiesCoords } from '../contants';
 import { getDistance } from '../utils/GeoUtils';
 import { UserApiServiceInstanse } from '../api/UserApiService';
 import { IUser } from '../api/models/IUser';
+import { OpenMapsAipServiceInstanse } from '../api/OpenMapsApiService';
+import { mapCoordsToString } from '../utils/mapCoordsToString';
+import { mapRouteToCoords } from '../utils/mapRouteToCoords';
 
 export class RootStore {
     parkings: IParking[] = [];
@@ -23,34 +26,43 @@ export class RootStore {
     isParkingsLoading: boolean = false;
     currentSearch: string = '';
     userProfile: IUser | null = null;
+    polylyne: ILineString | null = {
+        id: 'route',
+        geometry: {
+            type: 'LineString',
+            coordinates: [],
+        },
+        style: { stroke: [{ color: '#092896', width: 4 }] },
+    };
 
     constructor() {
         makeAutoObservable(this);
     }
 
+    prepareParkings(parkings: IParking[]): IParking[] {
+        return parkings.map((parking) => {
+            return {
+                ...parking,
+                distance: getDistance(
+                    {
+                        longitude: this.start[0],
+                        latitude: this.start[1],
+                    },
+                    {
+                        longitude: parking.center.longitude,
+                        latitude: parking.center.latitude,
+                    }
+                ),
+            };
+        });
+    }
+
     setParkings(parkings: IParking[]) {
-        this.parkings = parkings
-            .map((parking) => {
-                return {
-                    ...parking,
-                    distance: getDistance(
-                        {
-                            longitude: this.start[0],
-                            latitude: this.start[1],
-                        },
-                        {
-                            longitude: parking.center.longitude,
-                            latitude: parking.center.latitude,
-                        }
-                    ),
-                };
-            })
-            .sort((a, b) => {
-                return (
-                    (a.distance || Number.MAX_SAFE_INTEGER) -
-                    (b.distance || Number.MAX_SAFE_INTEGER)
-                );
-            });
+        this.parkings = this.prepareParkings(parkings).sort((a, b) => {
+            return (
+                (a.distance || Number.MAX_SAFE_INTEGER) - (b.distance || Number.MAX_SAFE_INTEGER)
+            );
+        });
     }
 
     setFilteredParkings(parkings: IParking[]) {
@@ -73,6 +85,8 @@ export class RootStore {
                 center: [parking.center.longitude, parking.center.latitude],
                 zoom: 16,
             });
+
+            this.fetchRoute();
         }
     }
 
@@ -118,6 +132,10 @@ export class RootStore {
         this.userProfile = userProfile;
     }
 
+    setPolylyne(polylyne: ILineString | null) {
+        this.polylyne = polylyne;
+    }
+
     toggleSearch() {
         this.isSearchOpened = !this.isSearchOpened;
     }
@@ -149,8 +167,14 @@ export class RootStore {
     async searchParkingsByAddress(address: string) {
         this.setIsParkingsLoading(true);
 
-        const parkings = await ParkingsApiServiceInstanse.getParkings({
-            address,
+        const addressLocation = await ParkingsApiServiceInstanse.getGeoLocation(address);
+
+        this.setStart(addressLocation);
+
+        const parkings = this.prepareParkings(this.parkings).sort((a, b) => {
+            return (
+                (a.distance || Number.MAX_SAFE_INTEGER) - (b.distance || Number.MAX_SAFE_INTEGER)
+            );
         });
 
         this.setParkings(parkings);
@@ -200,5 +224,33 @@ export class RootStore {
             time_start,
             time_end,
         });
+    }
+
+    async fetchRoute() {
+        if (this.activeParking !== null) {
+            const route = await OpenMapsAipServiceInstanse.fetchRoute(
+                mapCoordsToString(this.start),
+                mapCoordsToString([
+                    this.activeParking.center.longitude ?? 0,
+                    this.activeParking.center.latitude ?? 0,
+                ])
+            );
+
+            this.setPolylyne({
+                id: 'route',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: mapRouteToCoords(route),
+                },
+                style: { stroke: [{ color: '#196dff', width: 4 }] },
+            });
+
+            this.setMapLocation({
+                center: [this.activeParking.center.longitude, this.activeParking.center.latitude],
+                zoom: 16,
+            });
+
+            return route;
+        }
     }
 }

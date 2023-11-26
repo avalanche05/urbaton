@@ -126,6 +126,7 @@ const Parkings = observer(() => {
                                 />
                             );
                         })}
+                        <YMapFeature {...rootStore.polylyne} />
 
                         <YMapDefaultMarker coordinates={[rootStore.start[0], rootStore.start[1]]} />
                     </YMap>
@@ -141,6 +142,7 @@ const Parkings = observer(() => {
         rootStore.start,
         rootStore.filteredParkings,
         rootStore.activeParking,
+        rootStore.polylyne,
         rootStore,
     ]);
 
