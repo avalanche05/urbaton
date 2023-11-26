@@ -27,3 +27,8 @@ services:
       - "8000:8000"
     depends_on:
       - db
+  app:
+    build: ./frontend/
+    restart: always
+    ports:
+      - "3000:3000"
