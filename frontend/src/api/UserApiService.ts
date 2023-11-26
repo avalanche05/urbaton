@@ -23,8 +23,20 @@ export class UserApiService {
         );
     }
 
-    public async bookParking(params: IBookParams): Promise<void> {
-        const body = params;
+    public async bookParking({
+        cars,
+        parking_id,
+        place_id,
+        time_end,
+        time_start,
+    }: IBookParams): Promise<void> {
+        const body = {
+            car_ids: cars.map((car) => car.id),
+            parking_id,
+            place_id,
+            time_end,
+            time_start,
+        };
 
         await axios.post<void>(`${API_URL}/book/create`, body, {
             headers: authHeader(),

@@ -50,20 +50,7 @@ const ParkingGeneral = ({ parking: parking }: Props) => {
 
                 <Row justify={'space-between'} align={'middle'} style={{ marginTop: 7 }}>
                     <Col>
-                        <Rate
-                            // onChange={(value: number) =>
-                            //     rootStore
-                            //         .postParkingRating(value, parking._id)
-                            //         .then(() => {
-                            //             messageApi.success('Отзыв добавлен');
-                            //         })
-                            //         .catch(() => {
-                            //             messageApi.error('Ошибка добавления отзыва');
-                            //         })
-                            // }
-                            allowHalf
-                            defaultValue={parking.rating}
-                        />
+                        <Rate allowHalf defaultValue={parking.rating} disabled={true} />
                     </Col>
 
                     <Col>

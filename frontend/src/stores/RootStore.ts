@@ -9,6 +9,8 @@ import { IUser } from '../api/models/IUser';
 import { OpenMapsAipServiceInstanse } from '../api/OpenMapsApiService';
 import { mapCoordsToString } from '../utils/mapCoordsToString';
 import { mapRouteToCoords } from '../utils/mapRouteToCoords';
+import { ReviewsApiServiceInstanse } from '../api/ReviewsApiService';
+import { ICreateReviewBody } from '../api/models/IReview';
 
 export class RootStore {
     parkings: IParking[] = [];
@@ -252,5 +254,13 @@ export class RootStore {
 
             return route;
         }
+    }
+
+    async fetchReviews() {
+        return ReviewsApiServiceInstanse.getReviews(this.activeParking?.id ?? 0);
+    }
+
+    async createReview(body: ICreateReviewBody) {
+        return ReviewsApiServiceInstanse.createReview(body);
     }
 }

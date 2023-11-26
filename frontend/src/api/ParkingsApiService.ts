@@ -2,6 +2,7 @@ import axios from 'axios';
 import { API_URL } from '../config';
 import { IGetParkingsParams, IGetPlacesParams, IParking, IPlace } from './models';
 import authHeader from '../utils/authHeader';
+import { IGeo } from '../models';
 
 export class ParkingsApiService {
     public async getParkings({
