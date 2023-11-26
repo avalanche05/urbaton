@@ -34,22 +34,10 @@
 
 - **Аналитика**
   - Собрали аналитику по загруженности парковочных мест и теперь можем предсказывать спрос в любой день года с точностью до 2 машин.
+ 
+## Структура системы
 
-## Технологии
-
-### Backend
-
-- [**FastApi**](https://fastapi.tiangolo.com/) - фреймворк для создания веб-приложений на языке Python
-- [**PostgreSQL**](https://www.postgresql.org/) - реляционная база данных
-- [**SQLAlchemy**](https://www.sqlalchemy.org/) - ORM для работы с базой данных
-- [**Docker**](https://www.docker.com/) - платформа для разработки, доставки и запуска приложений
-- [**Docker Compose**](https://docs.docker.com/compose/) - инструмент для определения и запуска многоконтейнерных приложений с помощью Docker
-
-### Frontend
-
-- [**React**](https://reactjs.org/) - JavaScript-библиотека для создания пользовательских интерфейсов
-- [**Mobx**](https://mobx.js.org/) - библиотека для управления состоянием приложения
-- [**Ant Design**](https://ant.design/) - UI библиотека
+<img width="663" alt="image" src="https://github.com/avalanche05/urbaton/assets/21103882/d6140779-a283-434a-92b4-4283b1002f3a">
 
 ## Инструкция по запуску
 
@@ -72,6 +60,22 @@ docker-compose up --build
 ```
 
 После этого сервис будет доступен по адресу: [localhost:3000](http://localhost:3000)
+
+## Технологии
+
+### Backend
+
+- [**FastApi**](https://fastapi.tiangolo.com/) - фреймворк для создания веб-приложений на языке Python
+- [**PostgreSQL**](https://www.postgresql.org/) - реляционная база данных
+- [**SQLAlchemy**](https://www.sqlalchemy.org/) - ORM для работы с базой данных
+- [**Docker**](https://www.docker.com/) - платформа для разработки, доставки и запуска приложений
+- [**Docker Compose**](https://docs.docker.com/compose/) - инструмент для определения и запуска многоконтейнерных приложений с помощью Docker
+
+### Frontend
+
+- [**React**](https://reactjs.org/) - JavaScript-библиотека для создания пользовательских интерфейсов
+- [**Mobx**](https://mobx.js.org/) - библиотека для управления состоянием приложения
+- [**Ant Design**](https://ant.design/) - UI библиотека
 
 ## Команда
 
